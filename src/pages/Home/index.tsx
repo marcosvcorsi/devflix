@@ -16,9 +16,7 @@ const Home: React.FC = () => {
       <BannerMain
         videoTitle={dadosIniciais.categorias[0].videos[0].titulo}
         url={dadosIniciais.categorias[0].videos[0].url}
-        videoDescription={
-          'Na Live de Abertura da Imersão React, vamos analisar as aplicações da tecnologia em aplicações que usamos no dia a dia, além de tirar dúvidas sobre a Imersão.'
-        }
+        videoDescription="Na Live de Abertura da Imersão React, vamos analisar as aplicações da tecnologia em aplicações que usamos no dia a dia, além de tirar dúvidas sobre a Imersão."
       />
 
       <Carousel ignoreFirstVideo category={dadosIniciais.categorias[0]} />

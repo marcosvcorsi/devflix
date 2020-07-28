@@ -1,10 +1,10 @@
 import React from 'react';
 import { VideoCardContainer } from './styles';
 
-function getYouTubeId(youtubeURL: string) {
+function getYouTubeId(youtubeURL: string): string {
   return youtubeURL.replace(
     /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/,
-    '$7'
+    '$7',
   );
 }
 
@@ -20,7 +20,7 @@ const VideoCard: React.FC<Props> = ({
   categoryColor,
 }) => {
   const image = `https://img.youtube.com/vi/${getYouTubeId(
-    videoURL
+    videoURL,
   )}/hqdefault.jpg`;
   return (
     <VideoCardContainer

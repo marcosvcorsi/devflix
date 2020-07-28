@@ -1,10 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import logo from '../../assets/devflix.png';
 import ButtonLink from '../ButtonLink';
 
 import { Container } from './styles';
-import { Link } from 'react-router-dom';
 
 const Header: React.FC = () => {
   return (
