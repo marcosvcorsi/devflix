@@ -1,11 +1,8 @@
 import React from 'react';
-import {
-  VideoCardGroupContainer,
-  VideoCardList,
-  Title,
-  ExtraLink,
-} from './styles';
+import { VideoCardGroupContainer, Title, ExtraLink } from './styles';
 import VideoCard from './components/VideoCard';
+import Slider from './components/Slider';
+import { SliderItem } from './components/Slider/styles';
 
 interface Props {
   ignoreFirstVideo?: boolean;
@@ -24,7 +21,7 @@ interface Props {
   };
 }
 
-const VideoCardGroup: React.FC<Props> = ({ ignoreFirstVideo, category }) => {
+const Carousel: React.FC<Props> = ({ ignoreFirstVideo, category }) => {
   const categoryTitle = category.titulo;
   const categoryColor = category.cor;
   const categoryExtraLink = category.link_extra;
@@ -43,25 +40,25 @@ const VideoCardGroup: React.FC<Props> = ({ ignoreFirstVideo, category }) => {
           )}
         </>
       )}
-      <VideoCardList>
+      <Slider>
         {videos.map((video, index) => {
           if (ignoreFirstVideo && index === 0) {
             return null;
           }
 
           return (
-            <li key={video.titulo}>
+            <SliderItem key={video.titulo}>
               <VideoCard
                 videoTitle={video.titulo}
                 videoURL={video.url}
                 categoryColor={categoryColor}
               />
-            </li>
+            </SliderItem>
           );
         })}
-      </VideoCardList>
+      </Slider>
     </VideoCardGroupContainer>
   );
 };
 
-export default VideoCardGroup;
+export default Carousel;
