@@ -15,7 +15,7 @@ const Header: React.FC = () => {
             <img className="logo" src={logo} alt="ReactFlix" />
           </Link>
 
-          <ButtonLink to="/">Novo vídeo</ButtonLink>
+          <ButtonLink to="/cadastro-video">Novo vídeo</ButtonLink>
         </nav>
       </header>
     </Container>
