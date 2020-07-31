@@ -1,9 +1,10 @@
-import React, { useState, useCallback, ChangeEvent, FormEvent } from 'react';
+import React, { useState, useCallback, FormEvent } from 'react';
 
 import Main from '../Main';
 
 import FormField from '../../components/FormField';
 import Button from '../../components/Button';
+import { useForm } from '../../hooks/form';
 
 interface Category {
   nome: string;
@@ -19,15 +20,9 @@ const CadastroCategoria: React.FC = () => {
   };
 
   const [categorias, setCategorias] = useState<Category[]>([]);
-  const [categoria, setCategoria] = useState<Category>(initFormValues);
 
-  const handleChangeInput = useCallback(
-    (evt: ChangeEvent<HTMLInputElement>) => {
-      const newCategory = { ...categoria, [evt.target.name]: evt.target.value };
-
-      setCategoria(newCategory);
-    },
-    [categoria],
+  const { values: categoria, handleChange, clear } = useForm<Category>(
+    initFormValues,
   );
 
   const handleSubmit = useCallback(
@@ -35,9 +30,10 @@ const CadastroCategoria: React.FC = () => {
       evt.preventDefault();
 
       setCategorias([...categorias, categoria]);
-      setCategoria(initFormValues);
+
+      clear();
     },
-    [categoria, categorias, initFormValues],
+    [categoria, categorias, clear],
   );
 
   return (
@@ -48,14 +44,14 @@ const CadastroCategoria: React.FC = () => {
         <FormField
           name="nome"
           value={categoria.nome}
-          onChange={handleChangeInput}
+          onChange={handleChange}
           label="Digite o nome da categoria"
         />
 
         <FormField
           name="descricao"
           value={categoria.descricao}
-          onChange={handleChangeInput}
+          onChange={handleChange}
           label="Digite a descrição"
           multiline
         />
@@ -63,7 +59,7 @@ const CadastroCategoria: React.FC = () => {
         <FormField
           name="color"
           value={categoria.color}
-          onChange={handleChangeInput}
+          onChange={handleChange}
           label="Selecione uma cor"
           type="color"
         />
