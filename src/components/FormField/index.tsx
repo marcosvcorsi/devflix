@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
 
-import { Container } from './styles';
+import { Container, Label, LabelText, Input, TextArea } from './styles';
 
 interface Props {
   name: string;
@@ -21,14 +21,15 @@ const FormField: React.FC<Props> = ({
 }) => {
   return (
     <Container>
-      <label htmlFor={label}>
-        {label}
+      <Label htmlFor={label}>
         {multiline ? (
-          <textarea name={name} value={value} onChange={onChange} />
+          <TextArea name={name} value={value} onChange={onChange} />
         ) : (
-          <input name={name} type={type} value={value} onChange={onChange} />
+          <Input name={name} type={type} value={value} onChange={onChange} />
         )}
-      </label>
+
+        <LabelText>{label}</LabelText>
+      </Label>
     </Container>
   );
 };

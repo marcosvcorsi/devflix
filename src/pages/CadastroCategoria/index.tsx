@@ -3,6 +3,7 @@ import React, { useState, useCallback, ChangeEvent, FormEvent } from 'react';
 import Main from '../Main';
 
 import FormField from '../../components/FormField';
+import Button from '../../components/Button';
 
 interface Category {
   nome: string;
@@ -67,7 +68,7 @@ const CadastroCategoria: React.FC = () => {
           type="color"
         />
 
-        <button type="submit">Cadastrar</button>
+        <Button type="submit">Cadastrar</Button>
       </form>
 
       <ul>
