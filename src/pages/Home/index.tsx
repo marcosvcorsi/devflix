@@ -1,9 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useMemo } from 'react';
 import BannerMain from '../../components/BannerMain';
 import Carousel from '../../components/Carousel';
 
 import Main from '../Main';
-import api from '../../services/api';
+import { useApi } from '../../hooks/api';
+import Loading from '../../components/Loading';
+
+import { Container, LoadingContainer } from './styles';
 
 interface ICategory {
   id: number;
@@ -21,48 +24,52 @@ interface ICategory {
 }
 
 const Home: React.FC = () => {
-  const [firstCategory, setFirstCategory] = useState<ICategory | null>(null);
-  const [otherCategories, setOtherCategories] = useState<ICategory[]>([]);
+  const { data } = useApi<ICategory[]>('categorias?_embed=videos');
 
-  const loadCategories = useCallback(async () => {
-    const response = await api.get<ICategory[]>('/categorias', {
-      params: {
-        _embed: 'videos',
-      },
-    });
+  const firstCategory = useMemo(() => {
+    if (data && data.length) {
+      const [first] = data;
 
-    const categorias = response.data;
-
-    if (categorias && categorias.length) {
-      const [first] = categorias;
-
-      setFirstCategory(first);
-      setOtherCategories(categorias.slice(1));
+      return first;
     }
-  }, []);
 
-  useEffect(() => {
-    loadCategories();
-  }, [loadCategories]);
+    return undefined;
+  }, [data]);
+
+  const otherCategories = useMemo(() => {
+    if (data && data.length) {
+      return data.slice(1);
+    }
+
+    return undefined;
+  }, [data]);
 
   return (
     <Main isHome>
-      {firstCategory && (
-        <>
-          <BannerMain
-            videoTitle={firstCategory.videos[0].titulo}
-            url={firstCategory.videos[0].url}
-            videoDescription="Na Live de Abertura da Imersão React, vamos analisar as aplicações da tecnologia em aplicações que usamos no dia a dia, além de tirar dúvidas sobre a Imersão."
-          />
+      <Container>
+        {!data && (
+          <LoadingContainer>
+            <Loading />
+          </LoadingContainer>
+        )}
 
-          <Carousel ignoreFirstVideo category={firstCategory} />
-        </>
-      )}
+        {firstCategory && (
+          <>
+            <BannerMain
+              videoTitle={firstCategory.videos[0].titulo}
+              url={firstCategory.videos[0].url}
+              videoDescription="Na Live de Abertura da Imersão React, vamos analisar as aplicações da tecnologia em aplicações que usamos no dia a dia, além de tirar dúvidas sobre a Imersão."
+            />
 
-      {otherCategories &&
-        otherCategories.map(otherCategory => (
-          <Carousel key={otherCategory.id} category={otherCategory} />
-        ))}
+            <Carousel ignoreFirstVideo category={firstCategory} />
+          </>
+        )}
+
+        {otherCategories &&
+          otherCategories.map(otherCategory => (
+            <Carousel key={otherCategory.id} category={otherCategory} />
+          ))}
+      </Container>
     </Main>
   );
 };
