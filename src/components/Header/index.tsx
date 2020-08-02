@@ -6,7 +6,11 @@ import ButtonLink from '../ButtonLink';
 
 import { Container } from './styles';
 
-const Header: React.FC = () => {
+interface Props {
+  isHome: boolean;
+}
+
+const Header: React.FC<Props> = ({ isHome }) => {
   return (
     <Container>
       <header>
@@ -15,9 +19,11 @@ const Header: React.FC = () => {
             <img className="logo" src={logo} alt="ReactFlix" />
           </Link>
 
-          <ButtonLink to="/cadastro-video" className="button-link">
-            Novo vídeo
-          </ButtonLink>
+          {isHome && (
+            <ButtonLink to="/cadastro-video" className="button-link">
+              Novo vídeo
+            </ButtonLink>
+          )}
         </nav>
       </header>
     </Container>

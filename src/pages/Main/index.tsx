@@ -5,10 +5,14 @@ import Footer from '../../components/Footer';
 
 import { Container } from './styles';
 
-const Main: React.FC = ({ children }) => {
+interface Props {
+  isHome?: boolean;
+}
+
+const Main: React.FC<Props> = ({ children, isHome = false }) => {
   return (
     <>
-      <Header />
+      <Header isHome={isHome} />
       <Container>{children}</Container>
       <Footer />
     </>

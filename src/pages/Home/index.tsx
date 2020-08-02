@@ -58,7 +58,7 @@ const Home: React.FC = () => {
   }, [categorias]);
 
   return (
-    <Main>
+    <Main isHome>
       {firstCategory && (
         <>
           <BannerMain

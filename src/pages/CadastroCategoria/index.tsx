@@ -1,4 +1,5 @@
-import React, { useState, useCallback, FormEvent } from 'react';
+import React, { useState, useCallback, FormEvent, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import Main from '../Main';
 
@@ -6,72 +7,104 @@ import FormField from '../../components/FormField';
 import Button from '../../components/Button';
 import { useForm } from '../../hooks/form';
 
+import {
+  Container,
+  ButtonContainer,
+  CategoryList,
+  CategoryItem,
+} from './styles';
+import api from '../../services/api';
+
 interface Category {
-  nome: string;
+  id?: number;
+  titulo: string;
   descricao: string;
   color: string;
 }
 
 const CadastroCategoria: React.FC = () => {
   const initFormValues = {
-    nome: '',
+    titulo: '',
     descricao: '',
     color: '#000000',
   };
-
-  const [categorias, setCategorias] = useState<Category[]>([]);
 
   const { values: categoria, handleChange, clear } = useForm<Category>(
     initFormValues,
   );
 
+  const [categorias, setCategorias] = useState<Category[]>([]);
+
+  const loadCategories = useCallback(async () => {
+    const response = await api.get('/categorias');
+
+    setCategorias(response.data);
+  }, []);
+
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
+
   const handleSubmit = useCallback(
-    (evt: FormEvent) => {
+    async (evt: FormEvent) => {
       evt.preventDefault();
 
-      setCategorias([...categorias, categoria]);
+      await api.post('/categorias', categoria);
 
       clear();
+
+      await loadCategories();
     },
-    [categoria, categorias, clear],
+    [categoria, clear, loadCategories],
   );
 
   return (
     <Main>
-      <h1>Cadastro de Categoria:</h1>
+      <Container>
+        <h2>Categoria existentes: </h2>
 
-      <form onSubmit={handleSubmit}>
-        <FormField
-          name="nome"
-          value={categoria.nome}
-          onChange={handleChange}
-          label="Digite o nome da categoria"
-        />
+        <CategoryList>
+          {categorias.map(catItem => (
+            <CategoryItem key={catItem.id} itemColor={catItem.color}>
+              <strong>{catItem.titulo}</strong>
+              {catItem.descricao && <span>{catItem.descricao}</span>}
+            </CategoryItem>
+          ))}
+        </CategoryList>
 
-        <FormField
-          name="descricao"
-          value={categoria.descricao}
-          onChange={handleChange}
-          label="Digite a descrição"
-          multiline
-        />
+        <h2>Nova categoria:</h2>
 
-        <FormField
-          name="color"
-          value={categoria.color}
-          onChange={handleChange}
-          label="Selecione uma cor"
-          type="color"
-        />
+        <form onSubmit={handleSubmit}>
+          <FormField
+            name="titulo"
+            value={categoria.titulo}
+            onChange={handleChange}
+            label="Digite o titulo da categoria"
+          />
 
-        <Button type="submit">Cadastrar</Button>
-      </form>
+          <FormField
+            name="descricao"
+            value={categoria.descricao}
+            onChange={handleChange}
+            label="Digite a descrição"
+            multiline
+          />
 
-      <ul>
-        {categorias.map(item => (
-          <li key={item.nome}>{item.nome}</li>
-        ))}
-      </ul>
+          <FormField
+            name="color"
+            value={categoria.color}
+            onChange={handleChange}
+            label="Selecione uma cor"
+            type="color"
+          />
+
+          <ButtonContainer>
+            <Link to="/cadastro-video">Voltar para vídeos</Link>
+
+            <Button type="submit">Cadastrar</Button>
+          </ButtonContainer>
+        </form>
+      </Container>
     </Main>
   );
 };

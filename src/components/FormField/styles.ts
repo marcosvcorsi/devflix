@@ -10,7 +10,7 @@ export const Container = styled.div`
     min-height: 150px;
   }
   input[type='color'] {
-    padding-left: 56px;
+    padding-left: 175px;
   }
 `;
 
@@ -57,7 +57,7 @@ export const Input = styled.input<InputProps>`
   &:focus {
     border-bottom-color: var(--primary);
   }
-  &:focus:not([type='color']) + ${Label} {
+  &:focus:not([type='color']) + ${LabelText} {
     transform: scale(0.6) translateY(-10px);
   }
 
@@ -67,7 +67,7 @@ export const Input = styled.input<InputProps>`
     return (
       hasValue &&
       css`
-        &:not([type='color']) + ${Label} {
+        &:not([type='color']) + ${LabelText} {
           transform: scale(0.6) translateY(-10px);
         }
       `
