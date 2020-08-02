@@ -1,4 +1,4 @@
-import React, { useState, useCallback, FormEvent, useEffect } from 'react';
+import React, { useCallback, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 
 import Main from '../Main';
@@ -14,8 +14,9 @@ import {
   CategoryItem,
 } from './styles';
 import api from '../../services/api';
+import { useApi } from '../../hooks/api';
 
-interface Category {
+interface ICategory {
   id?: number;
   titulo: string;
   descricao: string;
@@ -23,27 +24,17 @@ interface Category {
 }
 
 const CadastroCategoria: React.FC = () => {
+  const { data, mutate } = useApi<ICategory[]>('categorias');
+
   const initFormValues = {
     titulo: '',
     descricao: '',
     cor: '#000000',
   };
 
-  const { values: categoria, handleChange, clear } = useForm<Category>(
+  const { values: categoria, handleChange, clear } = useForm<ICategory>(
     initFormValues,
   );
-
-  const [categorias, setCategorias] = useState<Category[]>([]);
-
-  const loadCategories = useCallback(async () => {
-    const response = await api.get('/categorias');
-
-    setCategorias(response.data);
-  }, []);
-
-  useEffect(() => {
-    loadCategories();
-  }, [loadCategories]);
 
   const handleSubmit = useCallback(
     async (evt: FormEvent) => {
@@ -53,13 +44,12 @@ const CadastroCategoria: React.FC = () => {
         await api.post('/categorias', categoria);
 
         clear();
-
-        await loadCategories();
+        mutate();
       } catch (err) {
         console.log(err);
       }
     },
-    [categoria, clear, loadCategories],
+    [categoria, clear, mutate],
   );
 
   return (
@@ -68,12 +58,13 @@ const CadastroCategoria: React.FC = () => {
         <h2>Categoria existentes: </h2>
 
         <CategoryList>
-          {categorias.map(catItem => (
-            <CategoryItem key={catItem.id} itemColor={catItem.cor}>
-              <strong>{catItem.titulo}</strong>
-              {catItem.descricao && <span>{catItem.descricao}</span>}
-            </CategoryItem>
-          ))}
+          {data &&
+            data.map(catItem => (
+              <CategoryItem key={catItem.id} itemColor={catItem.cor}>
+                <strong>{catItem.titulo}</strong>
+                {catItem.descricao && <span>{catItem.descricao}</span>}
+              </CategoryItem>
+            ))}
         </CategoryList>
 
         <h2>Nova categoria:</h2>
