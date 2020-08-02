@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  FormEvent,
-  useState,
-  useEffect,
-  useMemo,
-} from 'react';
+import React, { useCallback, FormEvent, useMemo } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import Main from '../Main';
@@ -14,6 +8,7 @@ import Button from '../../components/Button';
 import api from '../../services/api';
 
 import { Container, ButtonContainer } from './styles';
+import { useApi } from '../../hooks/api';
 
 interface ICategory {
   id: number;
@@ -24,7 +19,7 @@ interface ICategory {
 const CadastroVideo: React.FC = () => {
   const history = useHistory();
 
-  const [categories, setCategories] = useState<ICategory[]>([]);
+  const { data } = useApi<ICategory[]>('categorias');
 
   const { values, handleChange } = useForm({
     titulo: '',
@@ -32,19 +27,13 @@ const CadastroVideo: React.FC = () => {
     categoria: '',
   });
 
-  useEffect(() => {
-    async function loadCategories(): Promise<void> {
-      const response = await api.get<ICategory[]>('/categorias');
-
-      setCategories(response.data);
+  const suggestionCategories = useMemo(() => {
+    if (data && data.length) {
+      return data.map(categorie => categorie.titulo);
     }
 
-    loadCategories();
-  }, []);
-
-  const suggestionCategories = useMemo(() => {
-    return categories.map(categorie => categorie.titulo);
-  }, [categories]);
+    return [];
+  }, [data]);
 
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
@@ -53,22 +42,24 @@ const CadastroVideo: React.FC = () => {
 
         const { titulo, url, categoria } = values;
 
-        const findCategoria = categories.find(cat => cat.titulo === categoria);
+        if (data) {
+          const findCategoria = data.find(cat => cat.titulo === categoria);
 
-        if (findCategoria) {
-          await api.post('/videos', {
-            titulo,
-            url,
-            categoriaId: findCategoria.id,
-          });
+          if (findCategoria) {
+            await api.post('/videos', {
+              titulo,
+              url,
+              categoriaId: findCategoria.id,
+            });
 
-          history.push('/');
+            history.push('/');
+          }
         }
       } catch (err) {
         console.log(err);
       }
     },
-    [categories, history, values],
+    [data, history, values],
   );
 
   return (
