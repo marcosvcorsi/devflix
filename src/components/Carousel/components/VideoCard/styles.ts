@@ -25,8 +25,8 @@ export const VideoCardContainer = styled.a<VideoCardContainerProps>`
 
   &:hover,
   &:focus {
-    transform: scale(1.25);
-    z-index: 100;
+    transform: scale(1.2);
+    z-index: 20;
   }
 
   &:not(:first-child) {
