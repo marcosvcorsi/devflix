@@ -19,14 +19,14 @@ interface Category {
   id?: number;
   titulo: string;
   descricao: string;
-  color: string;
+  cor: string;
 }
 
 const CadastroCategoria: React.FC = () => {
   const initFormValues = {
     titulo: '',
     descricao: '',
-    color: '#000000',
+    cor: '#000000',
   };
 
   const { values: categoria, handleChange, clear } = useForm<Category>(
@@ -47,13 +47,17 @@ const CadastroCategoria: React.FC = () => {
 
   const handleSubmit = useCallback(
     async (evt: FormEvent) => {
-      evt.preventDefault();
+      try {
+        evt.preventDefault();
 
-      await api.post('/categorias', categoria);
+        await api.post('/categorias', categoria);
 
-      clear();
+        clear();
 
-      await loadCategories();
+        await loadCategories();
+      } catch (err) {
+        console.log(err);
+      }
     },
     [categoria, clear, loadCategories],
   );
@@ -65,7 +69,7 @@ const CadastroCategoria: React.FC = () => {
 
         <CategoryList>
           {categorias.map(catItem => (
-            <CategoryItem key={catItem.id} itemColor={catItem.color}>
+            <CategoryItem key={catItem.id} itemColor={catItem.cor}>
               <strong>{catItem.titulo}</strong>
               {catItem.descricao && <span>{catItem.descricao}</span>}
             </CategoryItem>
@@ -91,8 +95,8 @@ const CadastroCategoria: React.FC = () => {
           />
 
           <FormField
-            name="color"
-            value={categoria.color}
+            name="cor"
+            value={categoria.cor}
             onChange={handleChange}
             label="Selecione uma cor"
             type="color"

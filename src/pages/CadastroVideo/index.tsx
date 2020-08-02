@@ -13,9 +13,12 @@ import { useForm } from '../../hooks/form';
 import Button from '../../components/Button';
 import api from '../../services/api';
 
+import { Container, ButtonContainer } from './styles';
+
 interface ICategory {
   id: number;
   titulo: string;
+  cor: string;
 }
 
 const CadastroVideo: React.FC = () => {
@@ -53,7 +56,7 @@ const CadastroVideo: React.FC = () => {
         const findCategoria = categories.find(cat => cat.titulo === categoria);
 
         if (findCategoria) {
-          await api.post('/video', {
+          await api.post('/videos', {
             titulo,
             url,
             categoriaId: findCategoria.id,
@@ -70,34 +73,38 @@ const CadastroVideo: React.FC = () => {
 
   return (
     <Main>
-      <h1>Cadastro Video</h1>
+      <Container>
+        <h2>Cadastrar Novo Vídeo</h2>
 
-      <form onSubmit={handleSubmit}>
-        <FormField
-          label="Título do Vídeo"
-          name="titulo"
-          value={values.titulo}
-          onChange={handleChange}
-        />
+        <form onSubmit={handleSubmit}>
+          <FormField
+            label="Título do Vídeo"
+            name="titulo"
+            value={values.titulo}
+            onChange={handleChange}
+          />
 
-        <FormField
-          label="URL"
-          name="url"
-          value={values.url}
-          onChange={handleChange}
-        />
+          <FormField
+            label="URL"
+            name="url"
+            value={values.url}
+            onChange={handleChange}
+          />
 
-        <FormField
-          label="Categoria"
-          name="categoria"
-          value={values.categoria}
-          onChange={handleChange}
-          suggestions={suggestionCategories}
-        />
+          <FormField
+            label="Categoria"
+            name="categoria"
+            value={values.categoria}
+            onChange={handleChange}
+            suggestions={suggestionCategories}
+          />
 
-        <Button type="submit">Cadastrar</Button>
-      </form>
-      <Link to="/cadastro-categoria">Cadastro de categoria</Link>
+          <ButtonContainer>
+            <Link to="/cadastro-categoria">Ir para categorias</Link>
+            <Button type="submit">Cadastrar</Button>
+          </ButtonContainer>
+        </form>
+      </Container>
     </Main>
   );
 };

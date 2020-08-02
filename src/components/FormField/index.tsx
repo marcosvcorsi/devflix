@@ -23,6 +23,8 @@ const FormField: React.FC<Props> = ({
 }) => {
   const field_id = `id-${name}`;
 
+  const hasSuggestion = Boolean(suggestions && suggestions.length);
+
   return (
     <Container>
       <Label htmlFor={field_id}>
@@ -40,23 +42,26 @@ const FormField: React.FC<Props> = ({
             type={type}
             value={value}
             onChange={onChange}
-            autoComplete={suggestions ? 'off' : undefined}
-            list={`suggestion-${name}`}
+            autoComplete={hasSuggestion ? 'off' : 'on'}
+            list={hasSuggestion ? `suggestions-${field_id}` : undefined}
           />
         )}
 
-        <LabelText>{label}</LabelText>
-        <datalist id={`suggestions-${name}`}>
-          {suggestions &&
-            suggestions.map(suggestion => (
-              <option
-                key={`suggestion-option-${name}-${suggestion}`}
-                value={suggestion}
-              >
-                {suggestion}
-              </option>
-            ))}
-        </datalist>
+        <LabelText>{label}:</LabelText>
+
+        {hasSuggestion && (
+          <datalist id={`suggestions-${field_id}`}>
+            {suggestions &&
+              suggestions.map(suggestion => (
+                <option
+                  key={`suggestion-option-${field_id}-${suggestion}`}
+                  value={suggestion}
+                >
+                  {suggestion}
+                </option>
+              ))}
+          </datalist>
+        )}
       </Label>
     </Container>
   );

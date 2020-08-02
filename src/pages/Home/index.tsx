@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import BannerMain from '../../components/BannerMain';
 import Carousel from '../../components/Carousel';
 
@@ -21,41 +21,29 @@ interface ICategory {
 }
 
 const Home: React.FC = () => {
-  const [categorias, setCategorias] = useState<ICategory[]>([]);
+  const [firstCategory, setFirstCategory] = useState<ICategory | null>(null);
+  const [otherCategories, setOtherCategories] = useState<ICategory[]>([]);
 
-  useEffect(() => {
-    async function loadCategorias(): Promise<void> {
-      const response = await api.get<ICategory[]>('/categorias', {
-        params: {
-          _embed: 'videos',
-        },
-      });
+  const loadCategories = useCallback(async () => {
+    const response = await api.get<ICategory[]>('/categorias', {
+      params: {
+        _embed: 'videos',
+      },
+    });
 
-      setCategorias(response.data);
-    }
+    const categorias = response.data;
 
-    loadCategorias();
-  }, []);
-
-  const firstCategory = useMemo(() => {
-    if (categorias.length) {
+    if (categorias && categorias.length) {
       const [first] = categorias;
 
-      return first;
+      setFirstCategory(first);
+      setOtherCategories(categorias.slice(1));
     }
+  }, []);
 
-    return null;
-  }, [categorias]);
-
-  const otherCategories = useMemo(() => {
-    if (categorias.length) {
-      const newCategories = [...categorias];
-
-      return newCategories.slice(1);
-    }
-
-    return null;
-  }, [categorias]);
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
 
   return (
     <Main isHome>
