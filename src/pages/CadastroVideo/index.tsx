@@ -9,6 +9,7 @@ import api from '../../services/api';
 import { Container, ButtonContainer } from './styles';
 import { useApi } from '../../hooks/api';
 import Button from '../../components/Button';
+import { useToast } from '../../hooks/toast';
 
 interface ICategory {
   id: number;
@@ -20,6 +21,7 @@ const CadastroVideo: React.FC = () => {
   const history = useHistory();
 
   const { data } = useApi<ICategory[]>('categorias');
+  const { success, error } = useToast();
 
   const { values, handleChange } = useForm({
     titulo: '',
@@ -52,14 +54,18 @@ const CadastroVideo: React.FC = () => {
               categoriaId: findCategoria.id,
             });
 
+            success('Vídeo cadastrado com sucesso!');
+
             history.push('/');
           }
         }
       } catch (err) {
         console.log(err);
+
+        error('Erro ao cadastrar vídeo');
       }
     },
-    [data, history, values],
+    [data, history, values, success, error],
   );
 
   return (

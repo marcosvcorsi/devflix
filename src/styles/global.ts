@@ -33,4 +33,14 @@ export default createGlobalStyle`
     display: flex;
     flex-direction: column;
   }
+
+  .toast-success {
+    background-color: var(--primary);
+    border-radius: 5px;
+  }
+
+  .toast-error {
+    background-color: #D92525;
+    border-radius: 5px;
+  }
 `;

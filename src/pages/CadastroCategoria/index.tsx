@@ -15,6 +15,7 @@ import {
 } from './styles';
 import api from '../../services/api';
 import { useApi } from '../../hooks/api';
+import { useToast } from '../../hooks/toast';
 
 interface ICategory {
   id?: number;
@@ -25,6 +26,7 @@ interface ICategory {
 
 const CadastroCategoria: React.FC = () => {
   const { data, mutate } = useApi<ICategory[]>('categorias');
+  const { success, error } = useToast();
 
   const initFormValues = {
     titulo: '',
@@ -45,11 +47,15 @@ const CadastroCategoria: React.FC = () => {
 
         clear();
         mutate();
+
+        success('Categoria cadastrada com sucesso!');
       } catch (err) {
         console.log(err);
+
+        error('Erro ao cadastrar categoria');
       }
     },
-    [categoria, clear, mutate],
+    [categoria, clear, mutate, success, error],
   );
 
   return (
