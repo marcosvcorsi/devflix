@@ -96,7 +96,9 @@ const CadastroCategoria: React.FC = () => {
           <ButtonContainer>
             <Link to="/cadastro-video">Voltar para vídeos</Link>
 
-            <Button type="submit">Cadastrar</Button>
+            <Button type="submit" className="form-button">
+              Cadastrar
+            </Button>
           </ButtonContainer>
         </form>
       </Container>

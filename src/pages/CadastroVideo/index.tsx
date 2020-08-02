@@ -4,11 +4,11 @@ import { Link, useHistory } from 'react-router-dom';
 import Main from '../Main';
 import FormField from '../../components/FormField';
 import { useForm } from '../../hooks/form';
-import Button from '../../components/Button';
 import api from '../../services/api';
 
 import { Container, ButtonContainer } from './styles';
 import { useApi } from '../../hooks/api';
+import Button from '../../components/Button';
 
 interface ICategory {
   id: number;
@@ -92,7 +92,9 @@ const CadastroVideo: React.FC = () => {
 
           <ButtonContainer>
             <Link to="/cadastro-categoria">Ir para categorias</Link>
-            <Button type="submit">Cadastrar</Button>
+            <Button type="submit" className="form-button">
+              Cadastrar
+            </Button>
           </ButtonContainer>
         </form>
       </Container>

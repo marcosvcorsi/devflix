@@ -10,4 +10,14 @@ export const ButtonContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 5px;
+
+  .form-button {
+    background-color: var(--primary);
+
+    &:hover,
+    &:focus {
+      color: var(--background);
+      opacity: 0.8;
+    }
+  }
 `;
