@@ -23,6 +23,12 @@ export const Container = styled.ul`
   .slick-next {
     right: 16px;
   }
+
+  .slick-list {
+    overflow: visible !important;
+  }
+
+  overflow: visible !important;
 `;
 
 export const SliderItem = styled.li`

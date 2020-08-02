@@ -17,16 +17,16 @@ export const VideoCardContainer = styled.a<VideoCardContainerProps>`
   background-image: ${({ url }) => `url(${url})`};
   background-size: cover;
   background-position: center;
-  border-radius: 10px;
   position: relative;
   display: flex;
   align-items: flex-end;
   padding: 16px;
+  transition: 500ms;
 
-  transition: opacity 0.3s;
   &:hover,
   &:focus {
-    opacity: 0.5;
+    transform: scale(1.25);
+    z-index: 100;
   }
 
   &:not(:first-child) {
